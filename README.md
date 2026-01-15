@@ -1,4 +1,3 @@
-Aqui está o arquivo `README.md` formatado. Ele foi escrito sob a perspectiva de um desenvolvedor Python com domínio em físico-química, destacando tanto a estrutura do código quanto as fórmulas científicas implementadas (Nernst e Faraday).
 
 ---
 
