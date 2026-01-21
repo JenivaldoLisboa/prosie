@@ -1,15 +1,17 @@
 import math
 import data
 
+faraday = 96500
+
 def mols(i,t):
     #Converte valores de corrente em número de mols de elétrons.
-    return (i * t) / 96500
+    return (i * t) / faraday
 
 def corrente(n,nox,t):
-    return (n*nox*96500) / t
+    return (n*nox*faraday) / t
 
 def tempo(n,nox,i):
-    return (n*nox*96500) / i
+    return (n*nox*faraday) / i
 
 def massa(n,nox,MM):
     return (n/nox) * MM
@@ -59,13 +61,13 @@ def resposta_tabelacom2(x,y):
     print('--------------------------------------------')
     print('Potencial do ânodo','\t','Potencial do cátodo')
     print('--------------------------------------------')
-    print('{:>10,.2f}'.format(x),'V','{:>22,.2f}'.format(y),'V')
+    print(f'{x:>10,.2f} V {y:>22,.2f} V')
 
 def resposta_tabelacom3(x,y,z):
     print('-----------------------------------------------------------------------')
     print('Potencial do ânodo','\t','Potencial do cátodo','\t','Diferença de potencial')
     print('-----------------------------------------------------------------------')
-    print('{:>10,.2f}'.format(x),'V','{:>22,.2f}'.format(y),'V','{:>20,.2f}'.format(z),'V')
+    print(f'{x:>10,.2f} V {y:>22,.2f} V {z:>20,.2f} V')
 
 def start():
     print('Escolha o módulo que será iniciado:')
@@ -104,7 +106,7 @@ def start():
             pand = float(data.especies_quimicas[anodo]['potencial'])
             potencial = pcat - pand
             if potencial < 0:
-                print(f'\nO valor do potencial resultou em {potencial} V, indicando que o processo não é espontâneo e representa uma eletrólise. Inverta as espécies do ânodo e do cátodo que foram selecionadas e o resultado será positivo.')
+                print(f'\nPotencial: {potencial:.2f} V, tratando-se de um processo não espontâneo (eletrólise).')
             else:
                 resposta_tabelacom3(pand,pcat,potencial)
 
@@ -138,7 +140,7 @@ def start():
                 potencial = pcat - pand
                 if potencial > 0:
                     resposta_tabelacom2(pand,pcat)
-                    print(f'\n O valor do potencial resultou em',potencial,'V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
+                    print(f'\n Potencial: {potencial:.2f} V, indicando tratar-se de um processo espontâneo (pilha).')
                 else:
                     resposta_tabelacom3(pand,pcat,potencial)
 
@@ -157,7 +159,7 @@ def start():
                     potencial = float(data.cations[cation]['potencial']) - float(data.anions[anion]['potencial'])                
                     if potencial > 0:
                         resposta_tabelacom2(float(data.anions[anion]['potencial']),data.cations[cation]['potencial'])
-                        print(f'\nO valor do potencial resultou em {potencial} V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
+                        print(f'\nO valor do potencial resultou em {potencial:.2f} V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
                     else:
                         resposta_tabelacom3(float(data.anions[anion]['potencial']),float(data.cations[cation]['potencial']),potencial)
                 if cation >= 8 and 1 < anion < 4:
@@ -166,7 +168,7 @@ def start():
                     potencial = pot_cation - float(data.anions[anion]['potencial'])
                     if potencial > 0:
                         resposta_tabelacom2(float(data.anions[anion]['potencial']),pot_cation)
-                        print(f'\nO valor do potencial resultou em','{.2f}'.format(potencial),'V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
+                        print(f'\nPotencial: {potencial:.2f} V, indicando que trata-se de um processo espontâneo (pilha).')
                     else:
                         resposta_tabelacom3(float(data.anions[anion]['potencial']),pot_cation,potencial)
                 if 1 < cation < 8 and anion >= 4:
@@ -175,7 +177,7 @@ def start():
                     potencial = data.cations[cation]['potencial'] - pot_anion
                     if potencial > 0:
                         resposta_tabelacom2(pot_anion,data.cations[cation]['potencial'])
-                        print(f'\nO valor do potencial resultou em {potencial} V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
+                        print(f'\nO valor do potencial resultou em {potencial:.2f} V, indicando que neste sentido o processo é espontâneo e, consequentemente, representa uma pilha.')
                     else:
                         resposta_tabelacom3(pot_anion,data.cations[cation]['potencial'],potencial)
                 if cation >=8 and anion >=4:
@@ -191,21 +193,17 @@ def start():
             print('  [1] Simples')
             print('  [2] Comparativo\n')
             corrosao = 0
-            metais = ('  [1] Al','  [2] Fe(II)','  [3] Fe(III)','  [4] Zn')
-            nox = (3,2,3,2)
-            MM = (27,56,56,65)
             while corrosao < 1 or corrosao > 2:
                 corrosao = int(input('Digite um número: '))
             
     #Inicia o cálculo da variação de massa em um determinado metal sob as condições de corrente elétrica (A) e tempo (s) estipulados.
             if corrosao == 1:
-                print('O teste a seguir tem como objetivo avaliar a variação de massa de')
-                print('um metal durante um processo eletrolítico')
+                print('Avaliação da variação de massa de um metal durante um processo eletrolítico.')
                 print()
                 print('Escolha o metal a ser utilizado na simulação:')
                 print()
-                for w in metais:
-                    print(w)
+                for w in data.metais:
+                    print(f'{[w]} {data.metais[w]['especie']}')
                 print()
                 metal = 0
                 while metal < 1 or metal > 4:
@@ -216,7 +214,7 @@ def start():
                 i = int(input('Corrente elétrica (A): '))
                 t = int(input('Tempo (s): '))
                 n = mols(i,t)
-                resposta_corrosao01(n,MM[metal-1],nox[metal-1])
+                resposta_corrosao01(n,data.metais[metal]['MM'],data.metais[metal]['nox'])
 
     #Permite realizar comparações de variação de massa, corrente elétrica e tempo em um processo de corrosão.
             if corrosao == 2:
@@ -234,34 +232,32 @@ def start():
                     t = int(input('Tempo (s): '))
                     n = mols(i,t)
                     print()
-                    print('Número de mols de elétrons envolvidos:','%.2f' % n,'mol(s)')
-                    print()
+                    print(f'Número de mols de elétrons envolvidos: {n:.2f} mol(s)')
                     print('Variação de massa:')
                     print()
-                    for x in range(4):
-                        print(metais[x],'\t','==>','\t','%.5f' % massa(n,nox[x],MM[x]),'g')
+                    for x in data.metais:
+                        print(f'{data.metais[x]['especie']}\t==> {massa(n,data.metais[x]['nox'],data.metais[x]['MM']):.5f} g')
 
                 if variavel == 2:
                     dm = float(input('Variação de massa (g): '))
                     t = int(input('Tempo (s): '))
                     resposta_nmols(dm)
                     print('Corrente elétrica:')
-                    for x in range(4):
-                        print(metais[x],'\t','==>','\t','%.5f' % corrente(massa_mol(dm,MM[x]),nox[x],t),'A')
+                    for x in data.metais:
+                        print(f'{data.metais[x]['especie']}\t==> {corrente(massa_mol(dm,data.metais[x]['MM']),data.metais[x]['nox'],t):.5f} A')
 
                 if variavel == 3:
                     dm = float(input('Variação de massa: '))
                     i = int(input('Corrente elétrica (A): '))
                     resposta_nmols(dm)
                     print('Tempo:')
-                    for x in range(4):
-                        print(metais[x],'\t','==>','\t','%.5f' % corrente(massa_mol(dm,MM[x]),nox[x],i),'s')
+                    for x in data.metais:
+                        print(f'{data.metais[x]['especie']}\t==> {corrente(massa_mol(dm,data.metais[x]['MM']),data.metais[x]['nox'],i):.5f} s')
 
     #Inicia o módulo avançado.   
     if a == 2:
         print()
         print('Escolha a simulação que deseja iniciar:')
-        print()
         print('  [1] Pilha')
         print()
         mod2 = 0
@@ -284,7 +280,7 @@ def start():
             print()
             potencial_pad = float(data.especies_quimicas[catodo]['potencial']) - float(data.especies_quimicas[anodo]['potencial'])
             if potencial_pad < 0:
-                print(f'O valor de potencial padrão resultou em um número negativo ({potencial_pad} V ) de modo que o processo não corresponde a uma pilha. Inverta as opções de cátodo e ânodo para que possa continuar.')
+                print(f'Potencial padrão: {potencial_pad:.5f} V | O processo não corresponde a uma pilha.')
             else:
                 temp = int(input('Temperatura (K): '))
                 conc_anodo = float(input('Concentração molar do ânodo (mol/L): '))
@@ -319,7 +315,7 @@ def start():
                 print('-----------------------------------------------------------------------------------')
                 print('Potencial padrão','\t','Número de elétrons','\t','Quociente','\t','Potencial da pilha')
                 print('-----------------------------------------------------------------------------------')
-                print('{:>8,.2f}'.format(potencial_pad),'V','{:>20}'.format(neletro),'mol(s)','{:>16,.2f}'.format(quociente),'{:>20,.2f}'.format(potencial),'V')
+                print(f'{potencial_pad:>8,.2f} V {neletro:>20} mol(s) {quociente:>16,.2f} {potencial:>20,.2f} V')
     restart()
 
 def restart():

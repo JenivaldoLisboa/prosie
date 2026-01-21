@@ -29,3 +29,10 @@ especies_quimicas = {
     8: {'especie': 'Cu2+/Cu', 'potencial': 0.34, 'eletrons': 2},
     9: {'especie': 'Cl/Cl-', 'potencial': 1.36, 'eletrons': 2},
 }
+
+metais = {
+    1: {'especie': 'Al', 'nox': 3, 'MM': 27},
+    2: {'especie': 'Fe(II)', 'nox': 2, 'MM': 56},
+    3: {'especie': 'Fe(III)', 'nox': 3, 'MM': 56},
+    4: {'especie': 'Zn', 'nox': 2, 'MM': 65},
+}
